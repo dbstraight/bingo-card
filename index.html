@@ -1,0 +1,153 @@
+<!--
+    Copyright 2020 Daniel Straight
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo</title>
+    <style>
+        html {
+            font-family: sans-serif;
+            font-size: 60px;
+        }
+        .smalltext {
+            font-size: 40px;
+        }
+        @page {
+            margin: 0.5in;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            margin: 0 auto;
+            max-width: 8.5in;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th div, td div {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+        td {
+            border: 2px solid #333;
+            height: 1.5in;
+            width: 1.5in;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th><div><p>B</p></div></th>
+                <th><div><p>I</p></div></th>
+                <th><div><p>N</p></div></th>
+                <th><div><p>G</p></div></th>
+                <th><div><p>O</p></div></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+            </tr>
+            <tr>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+            </tr>
+            <tr>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p class="smalltext"></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+            </tr>
+            <tr>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+            </tr>
+            <tr>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+                <td><div><p></p></div></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+<script>
+    const shuffle = ([ ...arr ]) => {
+        let m = arr.length;
+        while (m) {
+            const i = Math.floor(Math.random() * m--);
+            [arr[m], arr[i]] = [arr[i], arr[m]];
+        }
+        return arr;
+    };
+
+    const columns = [];
+    document.querySelectorAll("tbody tr").forEach((row, rowIndex) => {
+        row.querySelectorAll("p").forEach((p, pIndex) => {
+            if (!(pIndex in columns)) {
+                columns[pIndex] = [];
+            }
+            columns[pIndex][rowIndex] = p;
+        });
+    });
+
+    function randomize(event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+        columns.forEach((col, colIndex) => {
+            const numbers = shuffle([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ])
+                .map(x => x + 15 * colIndex);
+            col.forEach((p, pIndex) => {
+                if (colIndex === (columns.length - 1) / 2 && pIndex === (col.length - 1) / 2) {
+                    p.textContent = "FREE";
+                }
+                else {
+                    p.textContent = numbers[pIndex];
+                }
+            });
+        });
+    }
+
+    document.getRootNode().addEventListener("mousedown", randomize);
+    window.addEventListener("load", randomize);
+</script>
+
+</html>
